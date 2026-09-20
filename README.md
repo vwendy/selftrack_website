@@ -7,4 +7,4 @@ Built by Chinese Art Lab, a 501(c)(3) nonprofit organization. Contact: admin@chi
 - Site: https://vwendy.github.io/selftrack_website/
 - Download: the latest APK is on the [Releases](../../releases) page and the site's Download page.
 
-The site is plain HTML and CSS. The only script is the feedback form, which builds an email in your own email app. There are no third-party scripts, cookies or trackers.
+The site is plain HTML and CSS with no third-party scripts, cookies or trackers. The only script is the feedback form, which sends the message you type to admin@chineseartlab.org through the FormSubmit form-forwarding service (or falls back to your email app).

@@ -27,37 +27,73 @@
 
   <form id="fb" novalidate>
     <p><label for="what"><strong>What happened, or what would you like?</strong></label><br>
-    <textarea id="what" name="what" rows="6" required style="width:100%"></textarea></p>
+    <textarea id="what" name="message" rows="6" required style="width:100%"></textarea></p>
     <p><label for="step"><strong>Which step or screen were you on?</strong> <span style="color:var(--muted)">(optional)</span></label><br>
     <input id="step" name="step" type="text" style="width:100%"></p>
     <p><label for="phone"><strong>Phone model and Android version</strong> <span style="color:var(--muted)">(optional, e.g. Samsung Galaxy S23, Android 15)</span></label><br>
     <input id="phone" name="phone" type="text" style="width:100%"></p>
     <p><label for="ver"><strong>App version</strong> <span style="color:var(--muted)">(optional, shown on the Download page)</span></label><br>
-    <input id="ver" name="ver" type="text" value="1.0" style="width:100%"></p>
+    <input id="ver" name="app_version" type="text" value="1.0" style="width:100%"></p>
+    <p><label for="email"><strong>Your email</strong> <span style="color:var(--muted)">(optional, only if you would like a reply)</span></label><br>
+    <input id="email" name="email" type="text" inputmode="email" autocomplete="email" style="width:100%"></p>
+    <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+    <input type="hidden" name="_subject" value="SelfTrack feedback">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
 
     <div class="notice warn">
       <strong>Please don't include personal or sensitive details</strong>, such as your name, health information, mood scores, or exported data files. This form does not need any of them.
     </div>
 
-    <p><button class="button" type="submit" style="border:0;cursor:pointer;font:inherit">Open my email app</button></p>
-    <p id="fb-msg" role="status" style="color:var(--muted)"></p>
+    <p><button class="button" id="fb-send" type="submit" style="border:0;cursor:pointer;font:inherit">Send feedback</button></p>
+    <p id="fb-msg" role="status" aria-live="polite" style="color:var(--muted)"></p>
+    <p id="fb-fallback" hidden><a class="button secondary" id="fb-mailto" href="#">Send it from my email app instead</a></p>
   </form>
   <noscript><p>This form needs JavaScript. You can instead email <a href="mailto:admin@chineseartlab.org">admin@chineseartlab.org</a> directly.</p></noscript>
 
-  <p><strong>How it works:</strong> pressing the button opens your email app with a message to <a href="mailto:admin@chineseartlab.org">admin@chineseartlab.org</a> already written. Nothing is sent until you press Send in your email app. Because it comes from your email address, we will see that address, so this is not anonymous. Nothing you type here is sent to any website or third party.</p>
+  <p><strong>Where your message goes:</strong> pressing Send delivers it to <a href="mailto:admin@chineseartlab.org">admin@chineseartlab.org</a> through <a href="https://formsubmit.co/" rel="noopener">FormSubmit</a>, a form-forwarding service, so you don't need an email account or app. The message contains only what you type, so we don't get your name, email or phone details unless you enter them. FormSubmit handles your message and your IP address to deliver it and keeps submissions for about 30 days (see its <a href="https://formsubmit.co/privacy.pdf" rel="noopener">privacy policy</a>). Nothing is stored on this website.</p>
 
   <script>
-  document.getElementById("fb").addEventListener("submit", function (e) {
-    e.preventDefault();
-    var f = e.target, what = f.what.value.trim(), msg = document.getElementById("fb-msg");
-    if (!what) { msg.textContent = "Please tell us what happened or what you would like."; f.what.focus(); return; }
-    var body = "What happened / what I'd like:\n" + what +
-      "\n\nStep or screen: " + (f.step.value.trim() || "-") +
-      "\nPhone and Android version: " + (f.phone.value.trim() || "-") +
-      "\nApp version: " + (f.ver.value.trim() || "-") + "\n";
-    msg.textContent = "Opening your email app. If nothing opens, email admin@chineseartlab.org directly.";
-    window.location.href = "mailto:admin@chineseartlab.org?subject=" + encodeURIComponent("SelfTrack feedback") + "&body=" + encodeURIComponent(body);
-  });
+  (function () {
+    var ENDPOINT = "https://formsubmit.co/ajax/admin@chineseartlab.org";
+    var f = document.getElementById("fb"), msg = document.getElementById("fb-msg"),
+        btn = document.getElementById("fb-send"), fb = document.getElementById("fb-fallback"),
+        mailto = document.getElementById("fb-mailto");
+
+    function composed() {
+      return "What happened / what I'd like:\n" + f.message.value.trim() +
+        "\n\nStep or screen: " + (f.step.value.trim() || "-") +
+        "\nPhone and Android version: " + (f.phone.value.trim() || "-") +
+        "\nApp version: " + (f.app_version.value.trim() || "-") + "\n";
+    }
+    function showFallback(text) {
+      msg.textContent = text;
+      mailto.href = "mailto:admin@chineseartlab.org?subject=" + encodeURIComponent("SelfTrack feedback") + "&body=" + encodeURIComponent(composed());
+      fb.hidden = false;
+      btn.disabled = false;
+    }
+
+    f.addEventListener("submit", function (e) {
+      e.preventDefault();
+      fb.hidden = true;
+      if (!f.message.value.trim()) { msg.textContent = "Please tell us what happened or what you would like."; f.message.focus(); return; }
+      if (f._honey.value) { return; }
+      btn.disabled = true; msg.textContent = "Sending...";
+      fetch(ENDPOINT, { method: "POST", headers: { "Accept": "application/json" }, body: new FormData(f) })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (String(d.success) === "true") {
+            f.reset(); f.app_version.value = "1.0"; btn.disabled = false;
+            msg.textContent = "Thank you! Your feedback was sent.";
+          } else {
+            showFallback("Sorry, we couldn't send that automatically. You can send it from your email app instead. Your text is kept below.");
+          }
+        })
+        .catch(function () {
+          showFallback("Sorry, we couldn't send that (are you offline?). You can send it from your email app instead. Your text is kept below.");
+        });
+    });
+  })();
   </script>
 
   <h2>Other ways to reach us</h2>
