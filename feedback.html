@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SelfTrack feedback</title>
-<meta name="description" content="Tell us what's confusing, broken or missing in SelfTrack. Feedback can be anonymous.">
+<meta name="description" content="Tell us what's confusing, broken or missing in SelfTrack.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,20 +25,40 @@
   <h1>Feedback</h1>
   <p class="lead">Tell us what was confusing, what broke, or what you wish the app did. It helps us improve SelfTrack for everyone.</p>
 
-  <p><a class="button" href="[[TODO-FEEDBACK-FORM-URL]]" rel="noopener">Open the feedback form</a></p>
+  <form id="fb" novalidate>
+    <p><label for="what"><strong>What happened, or what would you like?</strong></label><br>
+    <textarea id="what" name="what" rows="6" required style="width:100%"></textarea></p>
+    <p><label for="step"><strong>Which step or screen were you on?</strong> <span style="color:var(--muted)">(optional)</span></label><br>
+    <input id="step" name="step" type="text" style="width:100%"></p>
+    <p><label for="phone"><strong>Phone model and Android version</strong> <span style="color:var(--muted)">(optional, e.g. Samsung Galaxy S23, Android 15)</span></label><br>
+    <input id="phone" name="phone" type="text" style="width:100%"></p>
+    <p><label for="ver"><strong>App version</strong> <span style="color:var(--muted)">(optional, shown on the Download page)</span></label><br>
+    <input id="ver" name="ver" type="text" value="1.0" style="width:100%"></p>
 
-  <h2>Helpful things to mention</h2>
-  <ul>
-    <li>Your phone model and Android version (for example "Samsung Galaxy S23, Android 15").</li>
-    <li>Which step or screen you were on.</li>
-    <li>What you expected and what happened instead.</li>
-  </ul>
+    <div class="notice warn">
+      <strong>Please don't include personal or sensitive details</strong>, such as your name, health information, mood scores, or exported data files. This form does not need any of them.
+    </div>
 
-  <div class="notice warn">
-    <strong>Please don't include personal or sensitive details</strong>, such as your name, health information, mood scores, or exported data files. The form does not need any of them.
-  </div>
+    <p><button class="button" type="submit" style="border:0;cursor:pointer;font:inherit">Open my email app</button></p>
+    <p id="fb-msg" role="status" style="color:var(--muted)"></p>
+  </form>
+  <noscript><p>This form needs JavaScript. You can instead email <a href="mailto:admin@chineseartlab.org">admin@chineseartlab.org</a> directly.</p></noscript>
 
-  <p>Feedback is anonymous unless you choose to add an email address so we can reply.</p>
+  <p><strong>How it works:</strong> pressing the button opens your email app with a message to <a href="mailto:admin@chineseartlab.org">admin@chineseartlab.org</a> already written. Nothing is sent until you press Send in your email app. Because it comes from your email address, we will see that address, so this is not anonymous. Nothing you type here is sent to any website or third party.</p>
+
+  <script>
+  document.getElementById("fb").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var f = e.target, what = f.what.value.trim(), msg = document.getElementById("fb-msg");
+    if (!what) { msg.textContent = "Please tell us what happened or what you would like."; f.what.focus(); return; }
+    var body = "What happened / what I'd like:\n" + what +
+      "\n\nStep or screen: " + (f.step.value.trim() || "-") +
+      "\nPhone and Android version: " + (f.phone.value.trim() || "-") +
+      "\nApp version: " + (f.ver.value.trim() || "-") + "\n";
+    msg.textContent = "Opening your email app. If nothing opens, email admin@chineseartlab.org directly.";
+    window.location.href = "mailto:admin@chineseartlab.org?subject=" + encodeURIComponent("SelfTrack feedback") + "&body=" + encodeURIComponent(body);
+  });
+  </script>
 
   <h2>Other ways to reach us</h2>
   <p>For bugs and feature requests you can also open an <a href="https://github.com/vwendy/selftrack_website/issues">issue on GitHub</a> (this needs a GitHub account and is public, so don't include personal details). For anything else, see <a href="contact.html">Contact</a>.</p>
