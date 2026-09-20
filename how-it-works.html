@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How SelfTrack works and your privacy</title>
+<meta name="description" content="What SelfTrack records, what it never records, and how you stay in control.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+  <a class="brand" href="index.html">SelfTrack</a>
+  <nav aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="how-it-works.html" aria-current="page">How it works</a>
+    <a href="install.html">Install</a>
+    <a href="download.html">Download</a>
+    <a href="faq.html">FAQ</a>
+    <a href="feedback.html">Feedback</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</div></header>
+
+<main><div class="wrap">
+  <h1>How it works and your privacy</h1>
+  <p class="lead">SelfTrack pairs two things: how you use your phone, and how you say you feel. Here is exactly what it does with each.</p>
+
+  <h2>What it records</h2>
+  <table>
+    <tr><th>Signal</th><th>What is stored</th><th>Needs</th></tr>
+    <tr><td>Which apps you use and for how long</td><td>App name and start/end time. Home screen, system screens and SelfTrack itself are ignored.</td><td>Usage access</td></tr>
+    <tr><td>Screen on, off and unlock</td><td>Timestamps only</td><td>Nothing extra</td></tr>
+    <tr><td>Light and step sensors</td><td>Ambient light level and a step count, every few seconds at most</td><td>Physical activity permission</td></tr>
+    <tr><td>Mood check-ins</td><td>Your answers to four sliders, from 0 to 100</td><td>You answering</td></tr>
+    <tr><td>Taps, scrolling and typing timing <em>(optional)</em></td><td>Per app: counts of taps and scrolls, and when and how fast you type (number of characters and timing)</td><td>Accessibility permission, after you accept an in-app explanation</td></tr>
+  </table>
+
+  <h2>What it never records</h2>
+  <ul>
+    <li>The words you type, passwords, messages or notification contents.</li>
+    <li>What is on your screen, or screenshots.</li>
+    <li>Your location, contacts or clipboard.</li>
+  </ul>
+  <p>Password fields and the lock screen are skipped automatically. Banking, payment and password-manager apps start on an exclusion list, and you can change that list at any time.</p>
+
+  <h2>Where your data goes</h2>
+  <div class="notice">
+    <strong>Nowhere, unless you send it.</strong> The app has no internet permission, so it cannot upload anything, and we never receive your data.
+    Your data is stored on your phone. You can export it as files through Android's file picker and share it only if you choose to.
+  </div>
+
+  <h2>The optional tap, scroll and typing tracking</h2>
+  <p>This uses Android's Accessibility permission, which is powerful. Apps that misuse it can read a screen, which is why Android warns you when you turn it on. SelfTrack is set up so it cannot read window contents, and its code never stores text, but the permission itself gives more access than SelfTrack uses. That means you are trusting the app, so only install it from people you trust.</p>
+  <p>It is optional. Without it, SelfTrack still records app use, screen events, sensors and mood check-ins.</p>
+
+  <h2>Your controls</h2>
+  <ul>
+    <li><strong>Stop monitoring</strong> with one tap on the Data Collection tab.</li>
+    <li><strong>Pause or withdraw</strong> the tap, scroll and typing tracking at any time, and choose apps to exclude.</li>
+    <li><strong>Export</strong> your data as files whenever you like.</li>
+    <li><strong>Delete all data</strong> on the Data management tab. It erases every check-in and all recorded behavior from the app. Files you already exported stay where you saved them, so delete those yourself.</li>
+    <li><strong>Uninstall</strong> the app to remove it entirely.</li>
+  </ul>
+
+  <h2>What the charts mean</h2>
+  <p>SelfTrack plots your own social media time in the hour before each check-in against your Depression and Anxiety scores, and gives a plain-language reading. This shows whether two things move together in your own data. It does not show that one causes the other.</p>
+  <p>The check-in questions are adapted from the PHQ-2 and GAD-2 screening questions, with the time window shortened to "the past hour or so" and each answer on a 0 to 100 slider. That is not the validated clinical version, so treat the scores as an informal personal signal and not a diagnosis.</p>
+
+  <div class="notice warn">
+    <strong>Not a medical tool.</strong> If you are struggling, please talk to a healthcare professional. In the US you can call or text <strong>988</strong>.
+  </div>
+
+  <h2>Not a research study</h2>
+  <p>SelfTrack is a personal self-tracking tool, not a research study. We do not collect, receive, store or analyze your data, and there is nothing to sign up for. Anything you export stays wherever you save it.</p>
+</div></main>
+
+<footer class="site"><div class="wrap">
+  <p>SelfTrack is a self-reflection tool. It is not medical advice. We never receive your data.</p>
+  <p><a href="contact.html">Contact</a> · <a href="faq.html">FAQ</a></p>
+</div></footer>
+</body>
+</html>
