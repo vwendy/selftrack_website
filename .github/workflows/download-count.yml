@@ -1,0 +1,40 @@
+name: Log download counts
+
+# Once a day, record how many times each release file has been downloaded.
+# The log is kept on its own branch (download-log) so it never touches the website.
+on:
+  schedule:
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the log branch
+        uses: actions/checkout@v4
+        with:
+          ref: download-log
+
+      - name: Add today's counts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          today=$(date -u +%F)
+          grep -v "^${today}," downloads.csv > downloads.tmp || true
+          mv downloads.tmp downloads.csv
+          gh api "repos/${GITHUB_REPOSITORY}/releases" --paginate \
+            --jq '.[] | .tag_name as $t | .assets[] | "\($t),\(.name),\(.download_count)"' |
+            while IFS= read -r row; do echo "${today},${row}"; done >> downloads.csv
+          cat downloads.csv
+
+      - name: Save the log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add downloads.csv
+          git diff --cached --quiet || git commit -m "Download counts for $(date -u +%F)"
+          git push
